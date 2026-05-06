@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satyameva Jayate.ai - Enhanced Judicial Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .heatmap-bubble {
+            border-radius: 50%;
+            display: inline-block;
+            margin: 5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .heatmap-bubble:hover {
+            transform: scale(1.1);
+        }
+        .contradiction-alert {
+            animation: flash 0.5s ease-in-out;
+        }
+        @keyframes flash {
+            0%, 100% { background-color: transparent; }
+            50% { background-color: #fef2f2; }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .voice-wave {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+        .voice-bar {
+            width: 4px;
+            background: #667eea;
+            border-radius: 2px;
+            animation: wave 1s ease-in-out infinite;
+        }
+        .voice-bar:nth-child(odd) {
+            animation-delay: 0.1s;
+        }
+        .voice-bar:nth-child(even) {
+            animation-delay: 0.2s;
+        }
+        @keyframes wave {
+            0%, 100% { height: 20px; }
+            50% { height: 40px; }
+        }
+        .recording-indicator {
+            animation: record 1.5s ease-in-out infinite;
+        }
+        @keyframes record {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .sidebar-item {
+            transition: all 0.3s ease;
+        }
+        .sidebar-item:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+        }
+        .sidebar-item.active {
+            background-color: rgba(102, 126, 234, 0.2);
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-balance-scale text-3xl"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">Satyameva Jayate.ai</h1>
+                        <p class="text-sm opacity-90">Enhanced AI-Driven Judicial Platform</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <i class="fas fa-bell text-xl cursor-pointer hover:text-gray-200"></i>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <img src="https://picsum.photos/seed/user/40/40" alt="User" class="w-10 h-10 rounded-full">
+                        <div>
+                            <p class="text-sm font-semibold" id="userName">John Doe</p>
+                            <p class="text-xs opacity-75" id="userRole">Judge</p>
+                        </div>
+                    </div>
+                    <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg min-h-screen">
+            <nav class="p-4">
+                <div class="space-y-2">
+                    <div class="sidebar-item active p-3 rounded-lg cursor-pointer" onclick="showSection('dashboard')">
+                        <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
+                    </div>
+                    <div class="sidebar-item p-3 rounded-lg cursor-pointer" onclick="showSection('cases')">
+                        <i class="fas fa-folder-open mr-3"></i>Cases
+                    </div>
+                    <div class="sidebar-item p-3 rounded-lg cursor-pointer" onclick="showSection('hearings')">
+                        <i class="fas fa-gavel mr-3"></i>Hearings
+                    </div>
+                    <div class="sidebar-item p-3 rounded-lg cursor-pointer" onclick="showSection('evidence')">
+                        <i class="fas fa-shield-alt mr-3"></i>Evidence Vault
+                    </div>
+                    <div class="sidebar-item p-3 rounded-lg cursor-pointer" onclick="showSection('voice')">
+                        <i class="fas fa-microphone mr-3"></i>Voice Recording
+                    </div>
+                    <div class="sidebar-item p-3 rounded-lg cursor-pointer" onclick="showSection('library')">
+                        <i class="fas fa-book mr-3"></i>Law Library
+                    </div>
+                    <div class="sidebar-item p-3 rounded-lg cursor-pointer" onclick="showSection('analytics')">
+                        <i class="fas fa-chart-line mr-3"></i>Analytics
+                    </div>
+                    <div class="sidebar-item p-3 rounded-lg cursor-pointer" onclick="showSection('profile')">
+                        <i class="fas fa-user mr-3"></i>Profile
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <!-- Dashboard Section -->
+            <section id="dashboardSection" class="fade-in">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold text-gray-800">Dashboard</h2>
+                    <p class="text-gray-600">Welcome back! Here's your judicial overview.</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow p-6 card-hover cursor-pointer" onclick="navigateToSection('cases')">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Total Cases</p>
+                                <p class="text-2xl font-bold text-gray-800">47</p>
+                                <p class="text-xs text-green-600 mt-1">↑ 12% from last month</p>
+                            </div>
+                            <i class="fas fa-folder text-purple-500 text-3xl"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6 card-hover cursor-pointer" onclick="navigateToSection('hearings')">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Today's Hearings</p>
+                                <p class="text-2xl font-bold text-gray-800">3</p>
+                                <p class="text-xs text-blue-600 mt-1">Next: 2:00 PM</p>
+                            </div>
+                            <i class="fas fa-calendar text-blue-500 text-3xl"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6 card-hover cursor-pointer" onclick="navigateToSection('evidence')">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Evidence Files</p>
+                                <p class="text-2xl font-bold text-gray-800">234</p>
+                                <p class="text-xs text-orange-600 mt-1">12 pending review</p>
+                            </div>
+                            <i class="fas fa-shield-alt text-orange-500 text-3xl"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6 card-hover cursor-pointer" onclick="navigateToSection('voice')">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Voice Recordings</p>
+                                <p class="text-2xl font-bold text-gray-800">89</p>
+                                <p class="text-xs text-green-600 mt-1">5 transcribed today</p>
+                            </div>
+                            <i class="fas fa-microphone text-green-500 text-3xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity & Quick Actions -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Recent Activity -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Recent Activity</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                                <div>
+                                    <p class="text-sm font-semibold">Case #2024/00123 - Admitted</p>
+                                    <p class="text-xs text-gray-500">2 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                                <div>
+                                    <p class="text-sm font-semibold">New evidence uploaded in Case #2024/00120</p>
+                                    <p class="text-xs text-gray-500">4 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
+                                <div>
+                                    <p class="text-sm font-semibold">Voice recording transcribed for Hearing #45</p>
+                                    <p class="text-xs text-gray-500">6 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
+                                <div>
+                                    <p class="text-sm font-semibold">Judgment submitted for Case #2024/00115</p>
+                                    <p class="text-xs text-gray-500">1 day ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="showSection('voice')" class="bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-lg transition">
+                                <i class="fas fa-microphone text-2xl mb-2"></i>
+                                <p class="text-sm">Start Recording</p>
+                            </button>
+                            <button onclick="showSection('evidence')" class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg transition">
+                                <i class="fas fa-upload text-2xl mb-2"></i>
+                                <p class="text-sm">Upload Evidence</p>
+                            </button>
+                            <button onclick="showSection('cases')" class="bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg transition">
+                                <i class="fas fa-plus text-2xl mb-2"></i>
+                                <p class="text-sm">New Case</p>
+                            </button>
+                            <button onclick="showSection('library')" class="bg-orange-600 hover:bg-orange-700 text-white p-4 rounded-lg transition">
+                                <i class="fas fa-search text-2xl mb-2"></i>
+                                <p class="text-sm">Search Laws</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Voice Recording Section -->
+            <section id="voiceSection" class="hidden fade-in">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold text-gray-800">Voice Recording Studio</h2>
+                    <p class="text-gray-600">Record and transcribe court proceedings with AI-powered analysis.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Recording Controls -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Recording Controls</h3>
+                        
+                        <!-- Case Selection -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Case</label>
+                            <select id="caseSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option value="">Choose a case...</option>
+                                <option value="case1">Case #2024/00123 - Civil Dispute</option>
+                                <option value="case2">Case #2024/00120 - Property Matter</option>
+                                <option value="case3">Case #2024/00115 - Criminal Case</option>
+                            </select>
+                        </div>
+
+                        <!-- Speaker Selection -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Speaker Role</label>
+                            <select id="speakerSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option value="judge">Judge</option>
+                                <option value="lawyer">Lawyer</option>
+                                <option value="plaintiff">Plaintiff</option>
+                                <option value="defendant">Defendant</option>
+                                <option value="witness">Witness</option>
+                            </select>
+                        </div>
+
+                        <!-- Recording Status -->
+                        <div class="mb-4">
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium text-gray-700">Recording Status</span>
+                                    <span id="recordingStatus" class="text-sm text-gray-500">Ready</span>
+                                </div>
+                                <div class="voice-wave" id="voiceWave" style="display: none;">
+                                    <div class="voice-bar"></div>
+                                    <div class="voice-bar"></div>
+                                    <div class="voice-bar"></div>
+                                    <div class="voice-bar"></div>
+                                    <div class="voice-bar"></div>
+                                </div>
+                                <div class="text-center mt-2">
+                                    <span id="recordingTime" class="text-2xl font-bold text-gray-800">00:00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Control Buttons -->
+                        <div class="flex space-x-4">
+                            <button id="startRecording" onclick="startVoiceRecording()" class="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg transition">
+                                <i class="fas fa-microphone mr-2"></i>Start Recording
+                            </button>
+                            <button id="stopRecording" onclick="stopVoiceRecording()" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg transition" disabled>
+                                <i class="fas fa-stop mr-2"></i>Stop
+                            </button>
+                            <button id="pauseRecording" onclick="pauseVoiceRecording()" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-3 rounded-lg transition" disabled>
+                                <i class="fas fa-pause mr-2"></i>Pause
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Live Transcription -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Live Transcription</h3>
+                        
+                        <div class="bg-gray-50 rounded-lg p-4 h-64 overflow-y-auto mb-4">
+                            <div id="transcriptionArea">
+                                <p class="text-gray-500 text-center">Transcription will appear here...</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 bg-green-500 rounded-full recording-indicator" id="transcriptionIndicator" style="display: none;"></div>
+                                <span class="text-sm text-gray-600">Live transcription active</span>
+                            </div>
+                            <button onclick="clearTranscription()" class="text-sm text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-trash mr-1"></i>Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Recordings -->
+                <div class="bg-white rounded-lg shadow p-6 mt-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Recent Recordings</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recording</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Case</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Speaker</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="recordingsTable">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Hearing_45_Judge</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Case #2024/00123</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Judge</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15:32</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Transcribed</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-purple-600 hover:text-purple-900 mr-2">Play</button>
+                                        <button class="text-blue-600 hover:text-blue-900 mr-2">View</button>
+                                        <button class="text-gray-600 hover:text-gray-900">Download</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Testimony_Witness_01</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Case #2024/00120</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Witness</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">08:45</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Processing</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-purple-600 hover:text-purple-900 mr-2">Play</button>
+                                        <button class="text-blue-600 hover:text-blue-900 mr-2">View</button>
+                                        <button class="text-gray-600 hover:text-gray-900">Download</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Other sections would be similar... -->
+        </main>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-md mx-4">
+            <div class="text-center">
+                <i class="fas fa-check-circle text-green-500 text-5xl mb-4"></i>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Success!</h3>
+                <p id="successMessage" class="text-gray-600 mb-4"></p>
+                <button onclick="closeModal()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="js/voiceRecorder.js"></script>
+    <script src="js/enhancedApp.js"></script>
+</body>
+</html>

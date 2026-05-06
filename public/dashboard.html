@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satyameva Jayate.ai - Legal Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-balance-scale"></i> Satyameva Jayate.ai</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="#cases" class="nav-item" data-section="cases" data-roles="judge,lawyer,citizen,admin">
+                    <i class="fas fa-folder-open"></i> Cases
+                </a>
+                <a href="#hearings" class="nav-item" data-section="hearings" data-roles="judge,lawyer">
+                    <i class="fas fa-calendar-alt"></i> Hearings
+                </a>
+                <a href="#evidence" class="nav-item" data-section="evidence" data-roles="judge,lawyer,citizen,admin">
+                    <i class="fas fa-shield-alt"></i> Evidence
+                </a>
+                <a href="#voice" class="nav-item" data-section="voice" data-roles="judge,lawyer,citizen">
+                    <i class="fas fa-microphone"></i> Voice Recordings
+                </a>
+                <a href="#law-library" class="nav-item" data-section="law-library" data-roles="judge,lawyer,citizen">
+                    <i class="fas fa-book"></i> Law Library
+                </a>
+                <a href="#users" class="nav-item" data-section="users" data-roles="admin">
+                    <i class="fas fa-users"></i> Users
+                </a>
+                <a href="#system" class="nav-item" data-section="system" data-roles="admin">
+                    <i class="fas fa-cog"></i> System
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboardSection" class="content-section active">
+                <div class="content-header">
+                    <h1 id="dashboardTitle">Dashboard</h1>
+                    <p>Overview of your legal platform activities</p>
+                </div>
+                
+                <div id="dashboardStats">
+                    <!-- Stats will be populated dynamically -->
+                </div>
+            </section>
+
+            <!-- Cases Section -->
+            <section id="casesSection" class="content-section">
+                <div class="content-header">
+                    <h1>Cases</h1>
+                    <p>Manage and view your legal cases</p>
+                </div>
+                
+                <div class="search-filter-container">
+                    <input type="text" id="searchInput" class="form-control search-input" placeholder="Search cases...">
+                    <select id="filterSelect" class="form-control filter-select">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="active">Active</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                    <button class="btn-primary" onclick="dashboard.loadCases()">Search</button>
+                </div>
+                
+                <div id="casesContainer">
+                    <!-- Cases will be populated dynamically -->
+                </div>
+                
+                <div id="paginationContainer"></div>
+            </section>
+
+            <!-- Hearings Section -->
+            <section id="hearingsSection" class="content-section">
+                <div class="content-header">
+                    <h1>Hearing Schedule</h1>
+                    <p>View upcoming court hearings</p>
+                </div>
+                
+                <div id="hearingScheduleContainer">
+                    <!-- Hearing schedule will be populated dynamically -->
+                </div>
+            </section>
+
+            <!-- Evidence Section -->
+            <section id="evidenceSection" class="content-section">
+                <div class="content-header">
+                    <h1>Evidence Management</h1>
+                    <p>Upload and manage case evidence</p>
+                </div>
+                
+                <div class="search-filter-container">
+                    <input type="text" id="evidenceSearch" class="form-control search-input" placeholder="Search evidence...">
+                    <select id="evidenceFilter" class="form-control filter-select">
+                        <option value="">All Types</option>
+                        <option value="document">Documents</option>
+                        <option value="image">Images</option>
+                        <option value="video">Videos</option>
+                        <option value="audio">Audio</option>
+                    </select>
+                    <button class="btn-primary" onclick="dashboard.loadEvidence()">Search</button>
+                    <button class="btn-secondary" onclick="window.location.href='/evidence/upload'">
+                        <i class="fas fa-upload"></i> Upload Evidence
+                    </button>
+                </div>
+                
+                <div id="evidenceContainer">
+                    <!-- Evidence will be populated dynamically -->
+                </div>
+            </section>
+
+            <!-- Voice Recordings Section -->
+            <section id="voiceSection" class="content-section">
+                <div class="content-header">
+                    <h1>Voice Recordings</h1>
+                    <p>Record and transcribe court proceedings</p>
+                </div>
+                
+                <div class="voice-recording-container">
+                    <div class="form-group">
+                        <label for="caseId">Case ID:</label>
+                        <input type="text" id="caseId" class="form-control" placeholder="Enter case ID">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="speakerType">Speaker Type:</label>
+                        <select id="speakerType" class="form-control">
+                            <option value="">Select speaker type</option>
+                            <option value="plaintiff">Plaintiff</option>
+                            <option value="defendant">Defendant</option>
+                            <option value="witness">Witness</option>
+                            <option value="judge">Judge</option>
+                            <option value="lawyer">Lawyer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="language">Language:</label>
+                        <select id="language" class="form-control">
+                            <option value="en-US">English (US)</option>
+                            <option value="en-GB">English (UK)</option>
+                            <option value="hi-IN">Hindi</option>
+                            <option value="bn-IN">Bengali</option>
+                            <option value="ta-IN">Tamil</option>
+                            <option value="te-IN">Telugu</option>
+                            <option value="mr-IN">Marathi</option>
+                        </select>
+                    </div>
+                    
+                    <div class="recording-controls">
+                        <button id="recordButton" class="recording-btn record-btn">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button id="pauseButton" class="recording-btn pause-btn hidden">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button id="stopButton" class="recording-btn stop-btn hidden">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                    </div>
+                    
+                    <canvas id="audioVisualizer" class="audio-visualizer"></canvas>
+                    
+                    <div id="statusDisplay" class="status-display">Ready to record</div>
+                    
+                    <div class="form-group">
+                        <label>Transcription:</label>
+                        <div id="transcriptDisplay" class="transcript-display" placeholder="Transcription will appear here..."></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Duration: <span id="durationDisplay">00:00</span></label>
+                        <label>Confidence: <span id="confidenceDisplay">0%</span></label>
+                    </div>
+                    
+                    <audio id="audioPlayer" controls style="width: 100%; margin-top: 20px;"></audio>
+                    
+                    <button id="uploadButton" class="btn-primary" disabled>
+                        <i class="fas fa-upload"></i> Upload Recording
+                    </button>
+                </div>
+                
+                <div class="search-filter-container">
+                    <input type="text" id="voiceSearch" class="form-control search-input" placeholder="Search recordings...">
+                    <select id="voiceFilter" class="form-control filter-select">
+                        <option value="">All Speakers</option>
+                        <option value="plaintiff">Plaintiff</option>
+                        <option value="defendant">Defendant</option>
+                        <option value="witness">Witness</option>
+                        <option value="judge">Judge</option>
+                        <option value="lawyer">Lawyer</option>
+                    </select>
+                    <button class="btn-primary" onclick="dashboard.loadVoiceRecordings()">Search</button>
+                </div>
+                
+                <div id="voiceRecordingsContainer">
+                    <!-- Voice recordings will be populated dynamically -->
+                </div>
+            </section>
+
+            <!-- Law Library Section -->
+            <section id="law-librarySection" class="content-section">
+                <div class="content-header">
+                    <h1>Law Library</h1>
+                    <p>Search legal acts, sections, and regulations</p>
+                </div>
+                
+                <div class="search-filter-container">
+                    <input type="text" id="lawSearch" class="form-control search-input" placeholder="Search laws, acts, sections...">
+                    <select id="lawCategory" class="form-control filter-select">
+                        <option value="">All Categories</option>
+                        <option value="criminal">Criminal Law</option>
+                        <option value="civil">Civil Law</option>
+                        <option value="family">Family Law</option>
+                        <option value="property">Property Law</option>
+                        <option value="tax">Tax Law</option>
+                        <option value="labour">Labour Law</option>
+                        <option value="constitutional">Constitutional Law</option>
+                        <option value="corporate">Corporate Law</option>
+                    </select>
+                    <button class="btn-primary" onclick="searchLaws()">Search</button>
+                </div>
+                
+                <div id="lawLibraryContainer">
+                    <!-- Law library content will be populated dynamically -->
+                </div>
+            </section>
+
+            <!-- Users Section (Admin Only) -->
+            <section id="usersSection" class="content-section">
+                <div class="content-header">
+                    <h1>User Management</h1>
+                    <p>Manage platform users and permissions</p>
+                </div>
+                
+                <div class="search-filter-container">
+                    <input type="text" id="userSearch" class="form-control search-input" placeholder="Search users...">
+                    <select id="userRole" class="form-control filter-select">
+                        <option value="">All Roles</option>
+                        <option value="judge">Judges</option>
+                        <option value="lawyer">Lawyers</option>
+                        <option value="citizen">Citizens</option>
+                        <option value="admin">Administrators</option>
+                    </select>
+                    <button class="btn-primary" onclick="loadUsers()">Search</button>
+                    <button class="btn-secondary" onclick="window.location.href='/users/create'">
+                        <i class="fas fa-user-plus"></i> Add User
+                    </button>
+                </div>
+                
+                <div id="usersContainer">
+                    <!-- Users will be populated dynamically -->
+                </div>
+            </section>
+
+            <!-- System Section (Admin Only) -->
+            <section id="systemSection" class="content-section">
+                <div class="content-header">
+                    <h1>System Administration</h1>
+                    <p>Platform configuration and monitoring</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>System Status</h3>
+                        <div class="stat-number success">Healthy</div>
+                        <button class="stat-btn" onclick="checkSystemHealth()">Check Health</button>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Users</h3>
+                        <div class="stat-number" id="activeUsersCount">0</div>
+                        <button class="stat-btn" onclick="viewActiveUsers()">View Details</button>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Storage Used</h3>
+                        <div class="stat-number" id="storageUsed">0 GB</div>
+                        <button class="stat-btn" onclick="viewStorageStats()">View Details</button>
+                    </div>
+                    <div class="stat-card">
+                        <h3>API Requests</h3>
+                        <div class="stat-number" id="apiRequests">0</div>
+                        <button class="stat-btn" onclick="viewApiStats()">View Details</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Error Message -->
+    <div id="errorMessage" class="error-message"></div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="success-message"></div>
+
+    <!-- Scripts -->
+    <script src="/js/dashboard.js"></script>
+    <script src="/js/voiceRecording.js"></script>
+    
+    <script>
+        // Law library search function
+        async function searchLaws() {
+            const query = document.getElementById('lawSearch').value;
+            const category = document.getElementById('lawCategory').value;
+            
+            if (!query && !category) {
+                alert('Please enter a search query or select a category');
+                return;
+            }
+            
+            try {
+                dashboard.showLoading(true);
+                
+                let url = `/api/law-library/search?q=${encodeURIComponent(query)}`;
+                if (category) {
+                    url += `&category=${category}`;
+                }
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    renderLawSearchResults(result.data);
+                } else {
+                    throw new Error('Search failed');
+                }
+            } catch (error) {
+                console.error('Error searching laws:', error);
+                dashboard.showError('Failed to search laws');
+            } finally {
+                dashboard.showLoading(false);
+            }
+        }
+        
+        function renderLawSearchResults(data) {
+            const container = document.getElementById('lawLibraryContainer');
+            let html = '<div class="law-search-results">';
+            
+            if (data.laws.length === 0) {
+                html += '<p class="no-data">No laws found matching your search.</p>';
+            } else {
+                data.laws.forEach(law => {
+                    html += `
+                        <div class="law-result-card">
+                            <h3>${law.title}</h3>
+                            <p><strong>Act:</strong> ${law.actName}</p>
+                            <p><strong>Section:</strong> ${law.sectionNumber}</p>
+                            <p><strong>Category:</strong> ${law.category}</p>
+                            <p>${law.content.substring(0, 200)}...</p>
+                            <div class="law-actions">
+                                <button class="btn-primary" onclick="viewLawDetails('${law._id}')">View Details</button>
+                                <button class="btn-secondary" onclick="viewSimplifiedExplanation('${law._id}')">Simplified Explanation</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        function viewLawDetails(lawId) {
+            window.location.href = `/law-library/${lawId}`;
+        }
+        
+        function viewSimplifiedExplanation(lawId) {
+            window.location.href = `/law-library/${lawId}/simplified`;
+        }
+        
+        // System admin functions
+        async function checkSystemHealth() {
+            try {
+                const response = await fetch('/health');
+                const health = await response.json();
+                alert(`System Status: ${health.status}\nUptime: ${health.uptime} seconds\nEnvironment: ${health.environment}`);
+            } catch (error) {
+                alert('Failed to check system health');
+            }
+        }
+        
+        function viewActiveUsers() {
+            window.location.href = '/admin/users/active';
+        }
+        
+        function viewStorageStats() {
+            window.location.href = '/admin/storage';
+        }
+        
+        function viewApiStats() {
+            window.location.href = '/admin/api-stats';
+        }
+        
+        async function loadUsers() {
+            // User loading implementation
+            console.log('Loading users...');
+        }
+    </script>
+</body>
+</html>

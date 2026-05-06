@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satyameva Jayate.ai - Working Login System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .portal-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .portal-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .login-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+        .biometric-scanner {
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #f8f9fa 25%, #e9ecef 100%);
+            padding: 2rem;
+            text-align: center;
+        }
+        .voice-wave {
+            background: linear-gradient(90deg, #4ade80 0%, #3b82f6 50%, #4ade80 100%);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-balance-scale text-3xl"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">Satyameva Jayate.ai</h1>
+                        <p class="text-sm opacity-90">AI-Driven Integrity & Evidence Ecosystem for CCMS</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="userRole" class="hidden bg-white bg-opacity-20 px-4 py-2 rounded-full"></span>
+                    <button id="logoutBtn" class="hidden bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Section -->
+    <section id="loginSection" class="min-h-screen flex items-center justify-center">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-5xl font-bold text-gray-800 mb-4">Secure Access Portal</h2>
+                    <p class="text-xl text-gray-600">Select your role to access the Truth-First ecosystem</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Judge Portal -->
+                    <div class="portal-card bg-white rounded-xl shadow-xl p-8" onclick="openLogin('judge')">
+                        <div class="text-center">
+                            <div class="bg-purple-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-gavel text-purple-600 text-4xl"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-gray-800 mb-3">Judicial Portal</h3>
+                            <p class="text-gray-600 mb-4">Judge access with biometric authentication and case management</p>
+                            <div class="text-sm text-gray-500 text-left space-y-2">
+                                <div class="flex items-center mb-2">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Advanced Authentication</span>
+                                </div>
+                                <div class="flex items-center mb-2">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Case Management</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Real-time Analysis</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lawyer Portal -->
+                    <div class="portal-card bg-white rounded-xl shadow-xl p-8" onclick="openLogin('lawyer')">
+                        <div class="text-center">
+                            <div class="bg-blue-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-briefcase text-blue-600 text-4xl"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-gray-800 mb-3">Legal Portal</h3>
+                            <p class="text-gray-600 mb-4">Lawyer access with evidence vault and document analysis</p>
+                            <div class="text-sm text-gray-500 text-left space-y-2">
+                                <div class="flex items-center mb-2">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Case Management</span>
+                                </div>
+                                <div class="flex items-center mb-2">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Evidence Vault</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Document Analysis</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Common Man Portal -->
+                    <div class="portal-card bg-white rounded-xl shadow-xl p-8" onclick="openLogin('citizen')">
+                        <div class="text-center">
+                            <div class="bg-green-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-user text-green-600 text-4xl"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-gray-800 mb-3">Common Man Portal</h3>
+                            <p class="text-gray-600 mb-4">Citizen access with simplified legal guidance</p>
+                            <div class="text-sm text-gray-500 text-left space-y-2">
+                                <div class="flex items-center mb-2">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Case Tracking</span>
+                                </div>
+                                <div class="flex items-center mb-2">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Legal Guidance</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Document Library</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="modalTitle" class="text-2xl font-bold text-gray-800">Login</h3>
+                <button onclick="closeLoginModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="space-y-4">
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <input type="email" id="email" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                               placeholder="Enter your email address">
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" id="password" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                               placeholder="Enter your password">
+                    </div>
+
+                    <!-- Biometric Option -->
+                    <div id="biometricSection" class="hidden">
+                        <label class="flex items-center mb-4">
+                            <input type="checkbox" id="useBiometric" class="mr-2">
+                            <span class="text-sm text-gray-700">Use Biometric Authentication</span>
+                        </label>
+                        <button type="button" onclick="startBiometric()" 
+                                class="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg transition">
+                            <i class="fas fa-fingerprint mr-2"></i>Scan Biometric
+                        </button>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-3 px-4 rounded-lg transition">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Secure Login
+                    </button>
+
+                    <!-- Forgot Password -->
+                    <div class="text-center mt-4">
+                        <a href="#" onclick="showForgotPassword()" class="text-purple-600 hover:text-purple-500 text-sm">
+                            Forgot your password?
+                        </a>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Biometric Scanner -->
+            <div id="biometricScanner" class="hidden">
+                <div class="biometric-scanner">
+                    <div class="voice-wave"></div>
+                    <p class="text-gray-600 mb-4">Place your finger on the scanner</p>
+                    <button onclick="cancelBiometric()" 
+                            class="w-full bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-times mr-2"></i>Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <section id="dashboardSection" class="hidden min-h-screen">
+        <div class="container mx-auto px-4 py-8">
+            <!-- Dashboard Header -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-3xl font-bold text-gray-800">
+                        <span id="dashboardTitle">Dashboard</span>
+                    </h2>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-sm text-gray-500">
+                            <i class="fas fa-clock mr-2"></i>
+                            <span id="currentTime"></span>
+                        </div>
+                        <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Pending Cases</p>
+                            <p class="text-2xl font-bold text-gray-800" id="pendingCases">0</p>
+                        </div>
+                        <i class="fas fa-clock text-yellow-500 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Active Cases</p>
+                            <p class="text-2xl font-bold text-gray-800" id="activeCases">0</p>
+                        </div>
+                        <i class="fas fa-folder text-blue-500 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Resolved Cases</p>
+                            <p class="text-2xl font-bold text-gray-800" id="resolvedCases">0</p>
+                        </div>
+                        <i class="fas fa-check-circle text-green-500 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Total Evidence</p>
+                            <p class="text-2xl font-bold text-gray-800" id="totalEvidence">0</p>
+                        </div>
+                        <i class="fas fa-shield-alt text-purple-500 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Voice Recognition Panel -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-microphone mr-2"></i>Voice Recognition & Transcription
+                </h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-2">Voice Input</h4>
+                        <div class="space-y-2">
+                            <button onclick="startVoiceRecording()" 
+                                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition w-full">
+                                <i class="fas fa-microphone mr-2"></i>Start Recording
+                            </button>
+                            <button onclick="stopVoiceRecording()" 
+                                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition w-full">
+                                <i class="fas fa-stop mr-2"></i>Stop Recording
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-2">Transcript</h4>
+                        <div id="voiceTranscript" class="bg-gray-50 rounded-lg p-4 h-32 overflow-y-auto text-sm mb-2"></div>
+                        <div class="space-x-2">
+                            <button onclick="clearTranscript()" 
+                                    class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-3 py-2 rounded-lg transition">
+                                <i class="fas fa-trash mr-2"></i>Clear
+                            </button>
+                            <button onclick="saveTranscriptToCase()" 
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition">
+                                <i class="fas fa-save mr-2"></i>Save to Case
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Law Library Access -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-book mr-2"></i>Law Library Access
+                </h3>
+                <button onclick="openLawLibrary()" 
+                        class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold py-3 px-4 rounded-lg transition">
+                    <i class="fas fa-gavel mr-2"></i>Open Complete Law Library
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script>
+        // Global variables
+        let currentUser = null;
+        let authToken = null;
+        let currentRole = '';
+        let voiceRecognition = null;
+
+        // Initialize voice recognition
+        function initVoiceRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                voiceRecognition = new webkitSpeechRecognition();
+            } else if ('SpeechRecognition' in window) {
+                voiceRecognition = new SpeechRecognition();
+            } else {
+                console.warn('Speech recognition not supported');
+                return;
+            }
+
+            voiceRecognition.continuous = true;
+            voiceRecognition.interimResults = true;
+            voiceRecognition.lang = 'en-US';
+
+            voiceRecognition.onresult = (event) => {
+                let finalTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const result = event.results[i];
+                    if (result.isFinal) {
+                        finalTranscript = result[0].transcript;
+                    }
+                }
+
+                if (finalTranscript) {
+                    document.getElementById('voiceTranscript').innerHTML += finalTranscript + ' ';
+                }
+            };
+
+            voiceRecognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+            };
+        }
+
+        // Open login modal
+        function openLogin(role) {
+            console.log('Opening login modal for role:', role);
+            currentRole = role;
+            
+            const modal = document.getElementById('loginModal');
+            const title = document.getElementById('modalTitle');
+            const biometricSection = document.getElementById('biometricSection');
+            
+            modal.style.display = 'block';
+            title.textContent = role === 'judge' ? 'Judicial Portal Login' : 
+                              role === 'lawyer' ? 'Legal Portal Login' : 'Common Man Portal Login';
+            
+            // Show biometric option for judge only
+            if (role === 'judge') {
+                biometricSection.classList.remove('hidden');
+            } else {
+                biometricSection.classList.add('hidden');
+            }
+        }
+
+        // Close login modal
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        // Handle login
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const useBiometric = document.getElementById('useBiometric')?.checked || false;
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        role: currentRole,
+                        useBiometric: useBiometric,
+                        credentials: { demo: true }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.user;
+                    authToken = data.token;
+                    
+                    // Update UI
+                    closeLoginModal();
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('dashboardSection').classList.remove('hidden');
+                    document.getElementById('dashboardTitle').textContent = `${currentRole.charAt(0).toUpperCase() + currentRole.slice(1)} Dashboard`;
+                    
+                    // Load dashboard data
+                    loadDashboardData(currentRole);
+                    
+                } else {
+                    alert(`Login failed: ${data.message || 'Invalid credentials'}`);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Login failed. Please try again.');
+            }
+        }
+
+        // Load dashboard data
+        function loadDashboardData(role) {
+            const mockData = {
+                judge: { pendingCases: 5, activeCases: 12, resolvedCases: 8, totalEvidence: 45 },
+                lawyer: { pendingCases: 3, activeCases: 8, resolvedCases: 15, totalEvidence: 23 },
+                citizen: { pendingCases: 1, activeCases: 2, resolvedCases: 3, totalEvidence: 12 }
+            };
+
+            const data = mockData[role] || {};
+            
+            document.getElementById('pendingCases').textContent = data.pendingCases || 0;
+            document.getElementById('activeCases').textContent = data.activeCases || 0;
+            document.getElementById('resolvedCases').textContent = data.resolvedCases || 0;
+            document.getElementById('totalEvidence').textContent = data.totalEvidence || 0;
+        }
+
+        // Voice functions
+        function startVoiceRecording() {
+            if (!voiceRecognition) {
+                alert('Voice recognition not supported');
+                return;
+            }
+            
+            try {
+                voiceRecognition.start();
+                document.getElementById('voiceTranscript').innerHTML = 'Listening...';
+            } catch (error) {
+                console.error('Error starting recording:', error);
+            }
+        }
+
+        function stopVoiceRecording() {
+            if (!voiceRecognition) return;
+            
+            try {
+                voiceRecognition.stop();
+            } catch (error) {
+                console.error('Error stopping recording:', error);
+            }
+        }
+
+        function clearTranscript() {
+            document.getElementById('voiceTranscript').innerHTML = '';
+        }
+
+        function saveTranscriptToCase() {
+            const transcript = document.getElementById('voiceTranscript').textContent;
+            if (transcript.trim()) {
+                alert('Transcript saved to current case for legal reference');
+            }
+        }
+
+        // Biometric functions
+        function startBiometric() {
+            const scanner = document.getElementById('biometricScanner');
+            const form = document.getElementById('loginForm');
+            
+            form.style.display = 'none';
+            scanner.style.display = 'block';
+            
+            // Simulate biometric scan
+            setTimeout(() => {
+                scanner.innerHTML = `
+                    <div class="text-green-600 text-center">
+                        <i class="fas fa-check-circle text-4xl mb-4"></i>
+                        <p>Biometric Authentication Successful</p>
+                    </div>
+                `;
+                
+                setTimeout(() => {
+                    document.getElementById('email').value = `biometric-${currentRole}@satyameva.ai`;
+                    document.getElementById('password').value = 'biometric-authenticated';
+                    form.style.display = 'block';
+                    scanner.style.display = 'none';
+                }, 2000);
+            }, 3000);
+        }
+
+        function cancelBiometric() {
+            const scanner = document.getElementById('biometricScanner');
+            const form = document.getElementById('loginForm');
+            
+            scanner.style.display = 'none';
+            form.style.display = 'block';
+        }
+
+        function showForgotPassword() {
+            const email = prompt('Enter your email address for password reset:');
+            if (email) {
+                alert(`Password reset link sent to: ${email}`);
+            }
+        }
+
+        function openLawLibrary() {
+            window.open('/law-library.html', '_blank');
+        }
+
+        // Logout
+        function logout() {
+            currentUser = null;
+            authToken = null;
+            
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            const timeElement = document.getElementById('currentTime');
+            if (timeElement) {
+                timeElement.textContent = timeString;
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Simple login system loaded');
+            initVoiceRecognition();
+            updateTime();
+            setInterval(updateTime, 1000);
+        });
+    </script>
+</body>
+</html>
